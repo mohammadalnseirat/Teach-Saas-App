@@ -21,7 +21,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${bricolage.variable} antialiased`}>
+       
         <Navbar />
+        
         {children}
       </body>
     </html>
