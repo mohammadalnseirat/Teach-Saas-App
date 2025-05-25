@@ -10,7 +10,7 @@ import { recentSessions } from "@/constants";
 const Page = () => {
   return (
     <main className="bg-gray-100 min-h-screen ">
-      <AnimatedTitle className="font-semibold gradient-text text-3xl sm:text-4xl text-center md:text-left">
+      <AnimatedTitle className="font-semibold gradient-text text-3xl sm:text-4xl text-left">
         Popular Companions
       </AnimatedTitle>
       
