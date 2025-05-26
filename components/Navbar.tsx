@@ -3,8 +3,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import NavItems from "./NavItems";
-import { MenuIcon, LogIn } from "lucide-react";
+import { MenuIcon, LogIn, LogOut } from "lucide-react";
 import { useState } from "react";
+import { SignedIn, UserButton, SignedOut, SignInButton, SignOutButton } from "@clerk/nextjs";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -31,10 +32,23 @@ const Navbar = () => {
             <MenuIcon className="size-6 text-purple-200" />
           </button>
           <NavItems isOpen={isOpen} setIsOpen={setIsOpen} />
-          <button className="hover:text-red-700 cursor-pointer border border-gray-300 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-md text-gray-700  transition-all duration-300 flex items-center gap-2">
-            <LogIn className="size-5" />
-            <p>Sign in</p>
-          </button>
+          <SignedOut>
+            <SignInButton>
+              <button className="hover:text-red-700 cursor-pointer border border-gray-300 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-md text-gray-700  transition-all duration-300 flex items-center gap-2">
+                <LogIn className="size-5" />
+                <p>Sign in</p>
+              </button>
+            </SignInButton>
+          </SignedOut>
+          <SignedIn>
+            <UserButton />
+            <SignOutButton>
+              <button className="hover:text-red-900 cursor-pointer border border-gray-300 px-3 py-2 bg-white/20 hover:bg-red-200 rounded-md text-gray-700  transition-all duration-300">
+                <LogOut className="size-5" />
+                
+              </button>
+            </SignOutButton>
+          </SignedIn>
         </div>
       </div>
     </nav>
