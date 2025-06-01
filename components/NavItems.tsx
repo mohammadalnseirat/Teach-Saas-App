@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Home, Users, BookOpen, XIcon } from "lucide-react";
+import { Home, Users, BookOpen, XIcon, CreditCard } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useEffect, useRef } from "react";
@@ -21,6 +21,11 @@ const NAV_ITEMS = [
     label: "My Journey",
     href: "/my-journey",
     icon: BookOpen,
+  },
+  {
+    label: "Subscription",
+    href: "/subscription",
+    icon: CreditCard,
   },
 ];
 
