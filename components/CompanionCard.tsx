@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "./ui/button";
+import AnimatedSection from "./AnimatedSection";
 
 interface ICompanionCardProps {
   id: string;
@@ -20,6 +21,7 @@ const CompanionCard = ({
   color,
 }: ICompanionCardProps) => {
   return (
+    <AnimatedSection>
     <article className="companion-card" style={{ backgroundColor: color }}>
       <div className="flex items-center justify-between">
         <div className="subject-badge">{subject}</div>
@@ -57,7 +59,8 @@ const CompanionCard = ({
           Lunch Lesson
         </Button>
       </Link>
-    </article>
+      </article>
+    </AnimatedSection>
   );
 };
 

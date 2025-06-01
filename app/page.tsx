@@ -14,7 +14,6 @@ const Page = () => {
         Popular Companions
       </AnimatedTitle>
       
-        <AnimatedSection>
         <section className="home-section">
           <CompanionCard
             id='123'
@@ -41,7 +40,6 @@ const Page = () => {
             color="#BDE7FF"
           />
           </section>
-        </AnimatedSection>
       
       <section className="home-section">
         <CompanionsList
