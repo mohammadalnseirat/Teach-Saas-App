@@ -1,21 +1,25 @@
-"use client";
-
 import CompanionForm from "@/components/CompanionForm";
 import Image from "next/image";
 import React from "react";
-import { motion } from "framer-motion";
+import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
+import SlideInAnimation from "@/components/SlideInAnimation";
 
-const NewCompanion = () => {
+const NewCompanion = async () => {
+  const { userId } = await auth();
+
+  if (!userId) {
+    return redirect("/sign-in");
+  }
   return (
     <main className="min-h-screen py-10 sm:py-0 flex items-center justify-center p-4 sm:p-6 md:p-8">
       <article className="border border-gray-400 flex flex-col gap-16 md:gap-0 lg:flex-row w-full max-w-5xl mx-auto rounded-lg  bg-base-100 overflow-hiiden">
-        <CompanionForm />
+          <CompanionForm />
 
         {/* Right Side Start Here */}
-        <motion.div
-          initial={{ x: 50, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ duration: 0.5, ease: "easeOut", delay: 1.5 }}
+        <SlideInAnimation
+          direction="right"
+          delay={1.5}
           className="hidden lg:flex lg:w-1/2 rounded-tr-lg rounded-br-lg items-center justify-center bg-cta"
         >
           <div className="w-full max-w-md p-8">
@@ -37,7 +41,7 @@ const NewCompanion = () => {
               </p>
             </div>
           </div>
-        </motion.div>
+        </SlideInAnimation>
 
         {/* Right Side End Here */}
       </article>

@@ -1,28 +1,29 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectTrigger, SelectValue } from "./ui/select";
+import { Select, SelectContent, SelectTrigger, SelectValue, SelectItem } from "./ui/select";
 import { subjects } from "@/constants";
-import { SelectItem } from "@radix-ui/react-select";
-import { getSubjectColor } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "./ui/button";
-import AnimatedSection from "./AnimatedSection";
 import SlideInAnimation from "./SlideInAnimation";
+import { createNewCompanion } from "@/lib/actions/companion.action";
+import { toast } from "react-toastify";
+import { redirect } from "next/navigation";
+import { Loader } from "lucide-react";
+import { Textarea } from "./ui/textarea";
 
 const formSchema = z.object({
   name: z.string().min(1, {
@@ -46,6 +47,8 @@ const formSchema = z.object({
 });
 
 const CompanionForm = () => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -53,19 +56,32 @@ const CompanionForm = () => {
   }, []);
 
   const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: "",
-      subject: "",
-      topic: "",
-      voice: "",
-      style: "",
-      duration: 15,
-    },
-  });
+        resolver: zodResolver(formSchema),
+        defaultValues: {
+            name: '',
+            subject: '',
+            topic: '',
+            voice: '',
+            style: '',
+            duration: 15,
+        },
+    })
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    setIsLoading(true);
+    const companion = await createNewCompanion(values);
+
+    if (companion) {
+      toast.success('Companion created successfully');
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 2000);
+      form.reset();
+      redirect(`/companions/${companion.id}`);
+    } else {
+      toast.error('Failed to create a companion');
+      redirect('/');
+    }
   };
 
   if (!mounted) {
@@ -76,7 +92,7 @@ const CompanionForm = () => {
     <div className="w-full lg:w-1/2 md:h-[calc(100vh-100px)] md:overflow-y-auto flex flex-col gap-8 p-4 sm:p-6 md:p-8">
       <SlideInAnimation>
         {/* Logo Start Here */}
-        <div className="flex flex-col items-start justify-start gap-2">
+        <div className="flex flex-col items-start justify-start gap-2 mb-8">
           <Link href={"/"} className="flex items-center gap-2">
             <div className="flex items-center gap-2.5 border border-purple-600 rounded-md shadow-md">
               <Image
@@ -180,9 +196,8 @@ const CompanionForm = () => {
                       What should the companion help with?
                     </FormLabel>
                     <FormControl>
-                      <Input
+                      <Textarea
                         id="topic"
-                        type="text"
                         {...field}
                         placeholder="Enter a topic"
                         className="w-full border-gray-200 hover:border-green-400 focus-visible:ring-2 focus-visible:ring-green-500/20 focus-visible:border-green-500 focus-visible:shadow-[0_0_0_4px_rgba(34,197,94,0.1)] transition-all duration-300 ease-in-outborder focus:ring-2 focus:ring-green-500 focus:border-green-500 focus:shadow-sm"
@@ -304,8 +319,19 @@ const CompanionForm = () => {
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full cursor-pointer">
-                Build Your Companion
+              <Button
+                disabled={isLoading}
+                type="submit"
+                className="w-full cursor-pointer"
+              >
+                {isLoading ? (
+                  <div className="flex items-center justify-center gap-2">
+                    <span>Building your companion...</span>
+                    <Loader className="w-4 h-4 animate-spin" />
+                  </div>
+                ) : (
+                  "Build Your Companion"
+                )}
               </Button>
             </form>
           </Form>
